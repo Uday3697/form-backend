@@ -9,7 +9,9 @@ require ('dotenv').config()
 app.use(bodyParser.json());
 
 // Connect to MongoDB
+// kindlu use your env or mongo connection string here directly 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
 
 // Define Schema and Model for Form Data
 const formDataSchema = new mongoose.Schema({
@@ -27,6 +29,15 @@ app.post('/api/submit-form', async (req, res) => {
         res.status(201).json({ message: 'Form data saved successfully' });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while saving form data' });
+    }
+});
+// Route to get all stored form data
+app.get('/api/form-data', async (req, res) => {
+    try {
+        const allFormData = await FormData.find();
+        res.status(200).json(allFormData);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching form data' });
     }
 });
 
