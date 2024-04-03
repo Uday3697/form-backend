@@ -4,8 +4,10 @@ const mongoose = require('mongoose');
 const app = express();
 require ('dotenv').config()
 
+const cors=require('cors')
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
@@ -17,12 +19,13 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 const formDataSchema = new mongoose.Schema({
     name: String,
     email: String,
-    message: String
+    city:String,
+    phone:String
 });
 const FormData = mongoose.model('FormData', formDataSchema);
 
 // Routes
-app.post('/api/submit-form', async (req, res) => {
+app.post('/submit-form', async (req, res) => {
     try {
         const formData = new FormData(req.body);
         await formData.save();
@@ -32,7 +35,7 @@ app.post('/api/submit-form', async (req, res) => {
     }
 });
 // Route to get all stored form data
-app.get('/api/form-data', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const allFormData = await FormData.find();
         res.status(200).json(allFormData);
